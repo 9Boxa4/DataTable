@@ -20,6 +20,7 @@ const phoneNumberInput = document.getElementById("phoneNumberInput");
 const dateOfBirthInput = document.getElementById("dateOfBirthInput");
 const monthlySalaryInput = document.getElementById("monthlySalaryInput");
 
+onInit();
 
 //Attach events
 submitUserFormBtn.addEventListener("click",function(){
@@ -186,7 +187,11 @@ function createTableRows(dataCollection){
 
 });
 }
-createTableRows(employeeData.employee);
+
+
+function onInit(){
+    createTableRows(employeeData.employee);
+}
 
 
 
