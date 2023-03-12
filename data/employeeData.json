@@ -1,0 +1,47 @@
+{
+   "employee":[ 
+   {"id":"0", 
+    "fullName":"Marko Markovic",
+    "email":"markom@hotmail.com",
+    "phoneNumber":"+121255",
+    "dateOfBirth":"1991/05/19",
+    "monthlySalary":"600"
+},
+{"id":"1",
+    "fullName":"Zac Hamilton",
+    "email":"zac@yahoo.com",
+    "phoneNumber":"+122515",
+    "dateOfBirth":"1996/07/25",
+    "monthlySalary":"800"
+},
+{"id":"2",
+    "fullName":"Maria Johnson",
+    "email":"mariaj@hotmail.com",
+    "phoneNumber":"+116112",
+    "dateOfBirth":"2001/02/23",
+    "monthlySalary":"1000"
+},
+{"id":"3",
+    "fullName":"John Doe",
+    "email":"johnd@freemail.com",
+    "phoneNumber":"+112112",
+    "dateOfBirth":"1986/11/23",
+    "monthlySalary":"1200"
+},
+{"id":"4",
+    "fullName":"Scarlet Johnson",
+    "email":"scarlet@hotmail.com",
+    "phoneNumber":"+142552",
+    "dateOfBirth":"2001/02/23",
+    "monthlySalary":"800"
+},
+{"id":"5",
+    "fullName":"Marco Polo",
+    "email":"mcpolo@gmail.com",
+    "phoneNumber":"+116221",
+    "dateOfBirth":"2001/02/23",
+    "monthlySalary":"2000"
+}
+]
+}
+

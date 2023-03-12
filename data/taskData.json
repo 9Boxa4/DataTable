@@ -1,0 +1,21 @@
+{
+    "task":[ 
+    { "title":"wash car",
+     "description":"the car has been on a muddy road, and needs to be washed",
+     "assignee":1,
+     "dueDate":"2023/02/25"
+ },
+ {
+    "title":"pay bills",
+     "description":"paying the bills for electricity and water ",
+     "assignee":2,
+     "dueDate":"2023/02/12"
+ },
+ {
+    "title":"make dinner",
+    "description":"Make the dinner for the whole family",
+    "assignee":1,
+    "dueDate":"2023/03/13"
+ }]
+ }
+ 

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script defer type="module" src="script.js"></script>
+    <script src="https://kit.fontawesome.com/853edc4e93.js" crossorigin="anonymous"></script>    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+<!-- Modal -->
+<div class="modal fade" id="userAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body px-1">
+        <form id="userAddForm">
+          <div class="form-group row mx-0 justify-content-around">
+            <label class="col-md-4 col-form-label" for="fullNameInput" title="">full name:</label>
+            <input class="col-md-8 form-control" type="text" id="fullNameInput" required title="first and last name only">
+          </div>
+          <div class="form-group row mx-0 justify-content-around">
+            <label class="col-md-4" for="emailInput">email:</label>
+            <input class="col-md-8 form-control" type="email" id="emailInput" required title="email requires @ and a . (exaple 'myEmail@someMail.com')">
+          </div>
+          <div class="form-group row mx-0 justify-content-around">
+            <label class="col-md-4" for="phoneNumberInput">phone number:</label>
+            <input class="col-md-8 form-control" type="tel" minlength="6" id="phoneNumberInput" data-toggle="tooltip" data-html="true" title="please add prefix '+' to your area code number">
+          </div>
+          <div class="form-group row mx-0 justify-content-around">
+            <label class="col-md-4" for="dateOfBirthInput">date of birth:</label>
+            <input class="col-md-8 form-control" type="date" min='1920-12-31' max='2007-12-31' id="dateOfBirthInput" title="the year needs to be between 1920 and 2008" required>
+          </div>
+          <div class="form-group row mx-0 justify-content-around">
+            <label class="col-md-4" for="monthlySalaryInput">monthly salary:</label>
+              <input class="form-control col-md-8" type="number" min="300" id="monthlySalaryInput" title="Monthly salary cannot be under 300" required >
+              </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+        <button id="submitUserFormBtn" type="submit" class="btn btn-primary" >Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="row m-0 flex-column h-100 w-100 align-items-center justify-content-center" id="dataTablesContainer">
+        <div class="col-md-12 dataTable" id="userDataTable">
+          <div class="row m-2 justify-content-around">
+            <h2 id="userDataTitle" class="col-md-11 d-flex justify-content-center dataTitle justify-self-center">User </h2>
+            <button id="addUserBtn" data-toggle="modal" data-target="#userAddModal" class="col-md-1 btn btn-primary">Add user</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">fullName</th>
+                    <th scope="col">email</th>
+                    <th scope="col">phoneNumber</th>
+                    <th scope="col">dateOfBirth</th>
+                    <th scope="col">monthlySalary</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyUser">
+                </tbody>
+              </div>
+          
+        </div>
+        
+        <!-- <div class="dataTable w-75">
+            <h2 id="taskDataTitle" class="dataTitle">Task
+            </h2>
+            
+        </div> -->
+    </div>
+
+
+</body>
+</html>

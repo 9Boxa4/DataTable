@@ -1,0 +1,29 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100vh;
+}
+
+
+tbody tr {
+    cursor: pointer;
+
+}
+
+#tbodyUser tr:nth-child(odd){
+background-color: #c7c5c5;
+}
+
+#tbodyUser tr:hover{
+    background-color: rgb(129, 129, 129);
+}
+
+
+.form-control{
+    border:rgb(121, 121, 121) 1px solid;
+}
+
