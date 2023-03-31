@@ -9,9 +9,15 @@ function uuidv4() {
     );
   }
   
+//Initial variable declaration
+    let editingEmployee = false;
+    const employeecolumnNames = Object.keys(employeeData.employee[0]).filter(columnName=> columnName !== "id")
+    let selectedEmployeeId;
 
+// DOM element selectors
 const userDataTable= document.getElementById("tbodyUser");
 const submitUserFormBtn= document.getElementById("submitUserFormBtn");
+const addEmployeeBtn = document.getElementById("addEmployeeBtn")
 
 //Input fields
 const fullNameInput = document.getElementById("fullNameInput");
@@ -24,51 +30,70 @@ onInit();
 
 //Attach events
 submitUserFormBtn.addEventListener("click",function(){
-    let newUserObj = {};
-  
-    if(isInputFilled(fullNameInput.value) 
-    && isInputFilled(emailInput.value) 
-    && isInputFilled(phoneNumberInput.value) 
-    && isInputFilled(dateOfBirthInput.value) 
-    && isInputFilled(monthlySalaryInput.value)){
-        if(isValidFullName(fullNameInput.value)){
-            newUserObj.fullName = fullNameInput.value;
-            if(isValidEmail(emailInput.value)){
-                newUserObj.email= emailInput.value;
-                if(isValidPhoneNumber(phoneNumberInput.value)){
-                    newUserObj.phoneNumber = phoneNumberInput.value;
-                    if(isValidDateOfBirth(new Date(dateOfBirthInput.value))){
-                        newUserObj.dateOfBirth = new Date(dateOfBirthInput.value);
-                        if(isValidMonthlySalary(monthlySalaryInput.value)){
-                            newUserObj.monthlySalary = monthlySalaryInput.value
-                            newUserObj.id = uuidv4();
-                            console.log(newUserObj);
-                            createEmployee(newUserObj)
-                            this.setAttribute("data-dismiss","modal");
-                        }
-                    }
-                }
-            } 
-        }
-        console.log(isInputFilled('fields are filled'));
+    if(editingEmployee){
+        const employeeIndex = employeeData.employee.findIndex(element => element.id === selectedEmployeeId);
+        updateEmployee(employeeIndex);
+        this.setAttribute("data-dismiss","modal")
+    }else{
+        let newUserObj = {
+            fullName: fullNameInput.value,
+            email: emailInput.value,
+            phoneNumber: phoneNumberInput.value,
+            dateOfBirth: new Date(dateOfBirthInput.value),
+            monthlySalary: monthlySalaryInput.value,
+            id: uuidv4(),
+        };
+        this.removeAttribute("data-dismiss");
+      
+        if(isInputFilled(newUserObj.fullName,newUserObj.email,newUserObj.phoneNumber,newUserObj.dateOfBirth,newUserObj.monthlySalary))
+        {
+            if(
+                isValidFullName(newUserObj.fullName) &&
+                isValidEmail(newUserObj.email) &&
+                isValidPhoneNumber(newUserObj.phoneNumber) &&
+                isValidDateOfBirth(newUserObj.dateOfBirth) &&
+                isValidMonthlySalary(newUserObj.monthlySalary)
+            ){
+                    createEmployee(newUserObj);
+                    this.setAttribute("data-dismiss","modal");        
+                } 
+        } 
     }
-    else{
-        alert("you must fill out all the fields to proceed")
-    }
-
+    
 })
 
 
-userDataTable.addEventListener("click",(event)=>{
-    if(confirm("Are you sure you want to delete this user?")){
-        if(event.target.classList.contains("fa-trash-can")){
-            const idOfTheUserRow = event.target.parentElement.parentElement.id;
-            employeeData.employee = employeeData.employee.filter(data => data.id !== idOfTheUserRow);
-            createTableRows(employeeData.employee)
+addEmployeeBtn.addEventListener("click",function(){
+    editingEmployee = false;
+})
+
+userDataTable.addEventListener("click",handleUsers);
+
+
+// END OF EVENT LISTENERS //
+
+function handleUsers(event){
+    if(event.target.classList.contains("fa-trash-can")){
+        if(confirm("Are you sure you want to delete this user?")){
+        const employeeRowId = event.target.parentElement.parentElement.id;
+        employeeData.employee = employeeData.employee.filter(data => data.id !== employeeRowId);
+        createTableRows(employeeData.employee,employeecolumnNames)
+    }}
+
+    if(event.target.classList.contains("fa-pen-to-square")){
+        const editBtn = event.target
+        if(confirm("Are you sure you want to edit this user?")){
+            editingEmployee = true;
+            editBtn.setAttribute("data-toggle","modal")
+            const employeeRowId = editBtn.parentElement.parentElement.id;
+            selectedEmployeeId = employeeRowId;
+            fillEmployeeForm(employeeRowId)
+            // updateEmployee(employeeRowId)
+        }else{
+            editBtn.removeAttribute("data-toggle")
         }
     }
-});
-
+}
 function isValidFullName(value){
     const string = value.trim();
     const spacesCount = string.split(' ').length - 1;
@@ -82,27 +107,24 @@ function isValidFullName(value){
 
 
 
-function isValidEmail(value){
-    const atLocation = value.lastIndexOf("@");
-    const dotLocation = value.lastIndexOf("."); 
-    if( (atLocation > 0 )
-    &&  (dotLocation > atLocation + 1 )
-    &&   (dotLocation < value.length - 1)){
-                return true
-             }else{
+function isValidEmail(email){
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(regex.test(email)){
+            return true
+        }else{
                 alert("email needs '@' and a '.'");
                 return false
              }
 }
 
-function isValidPhoneNumber(value){
-        if(value[0] === "+"){
+function isValidPhoneNumber(phone){
+        const regex = /^[\+\d]*\(?([0-9]{3})\)?[-.]?([0-9]{3})[-.]?([0-9]{4})$/;
+        if(regex.test(phone) && phone.length < 15){
             return true
         }else{
-            alert("please add prefix '+' to your area code number");
+            alert("The phone number can contain sufix '+' and more than 9 numbers");
             return false;
-        }
-        
+        }      
 }
 
 function isValidDateOfBirth(value){
@@ -116,24 +138,28 @@ function isValidDateOfBirth(value){
 }
 
 function isValidMonthlySalary(value){
-    if(value >= 300){
+    if(value >= 300 && value.length < 5){
         return true
     }else{
-        alert("Monthly salary cannot be under 300");
+        alert("Monthly salary cannot be under 300 and must be less than 5 digits");
         return false;
     }
 }
 
 
-function isInputFilled(inputValue){
-    return(
-        inputValue.trim().length > 0
-    )
+function isInputFilled(...inputValues){
+    if(inputValues.every(input=> input.toString().trim().length > 0)){
+        return true
+    }else{
+        alert("you must fill out all the fields to proceed");
+        return false
+    }
+ 
 }
 
-// function clearInputFields(){
-
-// }
+function clearInputFields(...inputs) {
+    inputs.forEach(input => input.value = "");
+  }
 
 
 function createEmployee(newUser){
@@ -157,41 +183,77 @@ function createEmployee(newUser){
          }
          employeeData.employee.push(obj);
         }
-        createTableRows(employeeData.employee)
+        createTableRows(employeeData.employee,employeecolumnNames);
+        clearInputFields(fullNameInput, emailInput, phoneNumberInput, dateOfBirthInput, monthlySalaryInput);
 }
 
 
-function createTableRows(dataCollection){
+
+function createTableRows(dataCollection,columnNames){
     userDataTable.innerHTML = "";
+    console.log(employeeData.employee);
     dataCollection.forEach(data => {
     
-        const fullNameColumn = document.createElement("td");
-        const emailColumn = document.createElement("td");
-        const phoneNumberColumn = document.createElement("td");
-        const dateOfBirthColumn = document.createElement("td");
-        const monthlySalaryColumn = document.createElement("td");
-        const btnOptionsColumn = document.createElement("td");
-
-        fullNameColumn.textContent = data.fullName;
-        emailColumn.textContent= data.email;
-        phoneNumberColumn.textContent = data.phoneNumber;
-        dateOfBirthColumn.textContent = data.dateOfBirth;
-        monthlySalaryColumn.textContent = data.monthlySalary;
-        btnOptionsColumn.innerHTML= `<i class="fa-regular fa-trash-can btn btn-danger" title="delete user"></i> <i class="fa-regular fa-pen-to-square btn btn-primary" title="edit user"></i>`
-        btnOptionsColumn.classList.add("d-md-flex","justify-content-around")
-
-        let tableRow = document.createElement("tr");
+        const tableRow = document.createElement("tr");
         tableRow.setAttribute("id",data.id);
-        tableRow.append(fullNameColumn,emailColumn,phoneNumberColumn,dateOfBirthColumn,monthlySalaryColumn,btnOptionsColumn)
+
+        columnNames.forEach(columnName => {
+            const column = document.createElement("td");
+            column.textContent = data[columnName];
+            tableRow.appendChild(column);
+        });
+
+        const btnOptionsColumn = document.createElement("td");
+        btnOptionsColumn.innerHTML = `<i class="fa-regular fa-trash-can btn btn-danger" title="delete user"></i> <i class="fa-regular fa-pen-to-square btn btn-primary" title="edit user"  data-target="#employeeModifyModal" data-toggle="modal"></i>`;
+        btnOptionsColumn.classList.add("d-md-flex","justify-content-around");
+
+        tableRow.appendChild(btnOptionsColumn);
         userDataTable.appendChild(tableRow);
 
-});
+    });
 }
 
+function fillEmployeeForm(employeeId){
+    const selectedEmployee = employeeData.employee.find(element=> element.id === employeeId);
+    const employeeIndex = employeeData.employee.findIndex(element => element.id === employeeId);
+
+    //Get formatedBirthDate
+    const formatedBirthDate = new Date (selectedEmployee.dateOfBirth).toISOString().substring(0, 10)
+
+    //filled input fields
+    fullNameInput.value = selectedEmployee.fullName;
+    emailInput.value = selectedEmployee.email;
+    phoneNumberInput.value = selectedEmployee.phoneNumber;
+    dateOfBirthInput.value = formatedBirthDate
+    monthlySalaryInput.value = selectedEmployee.monthlySalary;
+}
+
+
+function updateEmployee(employeeIndex){
+    if(isInputFilled(fullNameInput.value,emailInput.value,phoneNumberInput.value,dateOfBirthInput.value,monthlySalaryInput.value)){
+        if(
+            isValidFullName(fullNameInput.value) &&
+            isValidEmail(emailInput.value) &&
+            isValidPhoneNumber(phoneNumberInput.value) &&
+            isValidDateOfBirth(new Date(dateOfBirthInput.value)) &&
+            isValidMonthlySalary(monthlySalaryInput.value)
+        )
+        {
+            const updatedEmployee = {
+                fullName: fullNameInput.value,
+                email: emailInput.value,
+                phoneNumber: phoneNumberInput.value,
+                dateOfBirth: dateOfBirthInput.value,
+                monthlySalary: monthlySalaryInput.value,
+                id: employeeData.employee[employeeIndex].id, // keep the same id
+              };
+                   employeeData.employee[employeeIndex] = updatedEmployee;
+                createTableRows(employeeData.employee,employeecolumnNames)
+                clearInputFields(fullNameInput, emailInput, phoneNumberInput, dateOfBirthInput, monthlySalaryInput);
+            } 
+    }
+}
 
 function onInit(){
-    createTableRows(employeeData.employee);
+    createTableRows(employeeData.employee,employeecolumnNames);
 }
-
-
-
